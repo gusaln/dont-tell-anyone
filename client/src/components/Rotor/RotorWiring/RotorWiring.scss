@@ -1,0 +1,30 @@
+@import "../../../styles/variables";
+@import "../../Rotors/variables.scss";
+
+.rotor__wiring__container {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 16px;
+  right: 16px;
+}
+
+.rotor__wiring {
+  width: 100%;
+  height: 100%;
+}
+
+.rotor__wire {
+  stroke: $rotor-wire-color;
+  stroke-width: 1;
+
+  &.rotor--input {
+    stroke: $primary;
+    stroke-width: 2;
+  }
+
+  &.rotor--output {
+    stroke: $secundary;
+    stroke-width: 2;
+  }
+}

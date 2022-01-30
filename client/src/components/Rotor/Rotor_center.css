@@ -1,0 +1,159 @@
+.rotor {
+  min-width: 60px;
+  max-width: 80px;
+  width: 70px;
+}
+
+.rotor__header {
+  display: flex;
+  justify-content: space-evenly;
+  align-content: center;
+
+  margin-bottom: 8px;
+  border-radius: 4px;
+  padding: 8px;
+
+  background-color: $grey;
+}
+
+.rotor__header h3 {
+  margin: auto 0;
+}
+
+.rotor__steps {
+  padding: 8px 2px;
+
+  background-color: $grey;
+}
+
+.rotor__step.rotor__step--odd {
+  position: relative;
+
+  left: -12px;
+
+  width: calc(100% + 24px);
+
+  padding-left: 12px;
+  padding-right: 12px;
+
+  background-color: $grey;
+}
+
+.rotor__step__content {
+  display: flex;
+  height: 15px;
+
+  padding: 0px 4px;
+
+  line-height: 0.9em;
+  font-size: 0.9em;
+}
+
+.rotor .rotor__step__content {
+  transition: all 100ms;
+  justify-content: space-between;
+}
+
+.rotor .rotor__step__center {
+  height: 100%;
+  padding: 0 4px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.rotor .rotor__step__center:hover {
+  padding: 2px 6px 0px 6px;
+
+  color: $grey;
+  background-color: $font-color;
+  font-weight: bolder;
+}
+
+.rotor__legend {
+  color: #a0a0a0;
+  padding-bottom: 4px;
+  font-size: 0.9em;
+}
+
+.rotor__step__left .rotor__legend {
+  margin-right: 4px;
+}
+
+.rotor__step__right .rotor__legend {
+  margin-left: 4px;
+}
+
+.rotor--notch {
+  position: relative;
+}
+
+.rotor--notch::before {
+  position: absolute;
+
+  width: 4px;
+  height: 4px;
+  left: -14px;
+  top: calc(50% - 3px);
+
+  border-radius: 100%;
+  border-radius: 999999px;
+  border: 1px solid $accent;
+  background: $accent;
+  content: "";
+}
+
+.rotor__forwards,
+.rotor__backwards {
+  position: relative;
+  font-weight: bolder;
+}
+
+.rotor__forwards {
+  color: $primary !important;
+}
+
+.rotor__backwards {
+  color: $secundary !important;
+}
+
+.rotor__forwards::before,
+.rotor__forwards::after,
+.rotor__backwards::before,
+.rotor__backwards::after {
+  position: absolute;
+}
+
+.rotor__forwards.rotor--input::before {
+  content: "<";
+  right: 130%;
+}
+
+.rotor__forwards.rotor--output::before {
+  content: "<";
+  left: 130%;
+}
+
+.rotor__backwards.rotor--input::after {
+  content: ">";
+  left: 130%;
+}
+
+.rotor__backwards.rotor--output::after {
+  content: ">";
+  right: 130%;
+}
+
+.rotor__footer {
+  display: flex;
+  justify-content: space-between;
+
+  padding-top: 8px;
+}
+
+.rotor__footer .button {
+  height: 30px;
+  width: 30px;
+
+  border-radius: 9999999px;
+  padding: 0.3em;
+}

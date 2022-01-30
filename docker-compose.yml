@@ -1,0 +1,66 @@
+version: '3.1'
+
+services:
+  client:
+    build:
+      context: client/
+      dockerfile: Dockerfile
+    environment:
+      REACT_APP_BASE_URL: ${CLIENT_SERVER_URL}
+      CHOKIDAR_USEPOLLING: 'true'
+    # depends_on:
+    #   - server
+    volumes:
+      - './client:/app'
+    networks:
+      - coms
+    ports:
+      - ${EXPOSE_PORT_CLIENT}:3000
+
+  # server:
+  #   build:
+  #     context: server/
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     NODE_ENV: development
+  #     DB_HOST: ${DB_HOST}
+  #     DB_PORT: ${DB_PORT}
+  #     DB_USER: ${DB_USER}
+  #     DB_PASSWORD: ${DB_PASSWORD}
+  #     DB_DATABASE: ${DB_DATABASE}
+  #   depends_on:
+  #     - db
+  #   volumes:
+  #     - './server:/var/www'
+  #   networks:
+  #     - coms
+  #   ports:
+  #     - ${EXPOSE_PORT_SERVER}:${SERVER_PORT}
+
+  # Comment this service if you do not want to use adminer
+  adminer:
+    image: adminer
+    depends_on:
+      - db
+    networks:
+      - coms
+    ports:
+      - ${EXPOSE_PORT_ADMINER}:8080
+  # db:
+  #   image: postgres:13-alpine
+  #   environment:
+  #     PGDATA: /var/lib/postgresql/data/pgdata
+  #     POSTGRES_DB: ${DB_DATABASE}
+  #     POSTGRES_USER: ${DB_USER}
+  #     POSTGRES_PASSWORD: ${DB_PASSWORD}
+  #   volumes:
+  #     - ./docker/volumes/db:/var/lib/postgresql/data
+  #     - ~/.local/share/dont-tell-anyone-docker/volumes/db:/var/lib/postgresql/data
+  #   networks:
+  #     - coms
+  #   ports:
+  #     - ${EXPOSE_PORT_DB}:5432
+
+networks:
+  coms:
+    driver: bridge

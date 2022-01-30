@@ -1,0 +1,11 @@
+@import "../../styles/variables";
+
+.singleletter-input {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  margin-top: 0.8rem;
+  margin-left: 0;
+  margin-right: 0;
+}

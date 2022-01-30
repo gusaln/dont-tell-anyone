@@ -1,0 +1,44 @@
+// Misc
+$border-radius: 4px;
+$padding: 4px;
+
+// Shadows
+$shadow-1: 2px 2px 4px 1px
+    rgba(
+      $color: #0f0f0f,
+      $alpha: 0.2,
+    ),
+  -1px -1px 4px 1px
+    rgba(
+      $color: #0f0f0f,
+      $alpha: 0.1,
+    );
+
+// Colors
+$red: #db1f48;
+$navy-blue: #004369;
+$teal: #01949a;
+$sand-dollar: #e5ddc8;
+$grey: #484f5c;
+
+$salmon: #ff6d69;
+$mustard: #fecc50;
+$aquamarine: #0be7fb;
+$deepblue: #010b8b;
+$purple: #350b44;
+
+// Derived colors
+$grey-light: lighten($grey, 8%);
+$grey-dark: darken($grey, 10%);
+$grey-darker: darken($grey, 20%);
+
+// Named colors
+$primary: $salmon;
+$secundary: $aquamarine;
+$accent: $mustard;
+$mix: #ff6dfb;
+
+$font-color: #fff;
+$background-color-light: $grey;
+$background-color: $grey-dark;
+$background-color-dark: $grey-darker;

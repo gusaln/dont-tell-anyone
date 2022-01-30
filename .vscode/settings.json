@@ -1,0 +1,10 @@
+{
+  "editor.formatOnSave": true,
+  "python.pythonPath": "/home/gusaln/miniconda3/bin/python",
+  "python.formatting.provider": "black",
+
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.organizeImports": true,
+  }
+}

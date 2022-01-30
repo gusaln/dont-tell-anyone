@@ -1,0 +1,35 @@
+@import "../../styles/variables";
+
+.card {
+  border-radius: $border-radius;
+  padding-left: 8px;
+  padding-right: 8px;
+
+  background-color: $grey;
+  overflow-wrap: break-word;
+}
+
+.card.card--expand {
+  width: 100%;
+  height: 100%;
+  flex-grow: 1;
+}
+
+.card .card__title,
+.card .card__subtitle {
+  color: $font-color;
+}
+
+.card .card__title {
+  margin-top: 8px;
+  font-size: 1.4rem;
+}
+
+.card .card__subtitle {
+  display: block;
+
+  margin-bottom: 4px;
+
+  font-weight: normal;
+  font-size: 0.8rem;
+}

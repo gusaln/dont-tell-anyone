@@ -1,0 +1,88 @@
+@import "../../styles/variables";
+
+$select-background-color: $grey;
+$select-background-color-active: $grey-light;
+
+.select {
+  position: relative;
+
+  flex-shrink: 1;
+}
+
+.select.select--full {
+  flex-grow: 1 !important;
+  flex-shrink: 0;
+}
+
+.select__activator {
+  transition: all 200ms ease-out;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+
+  border-radius: $border-radius;
+  padding: 2 * $padding;
+
+  cursor: pointer;
+
+  background-color: $select-background-color;
+  &:active,
+  &:hover {
+    background-color: $select-background-color-active;
+  }
+}
+
+.select__list {
+  transition: all 200ms ease-out;
+
+  display: block;
+  visibility: hidden;
+  opacity: 0;
+
+  // min-width: 120px;
+  width: max-content;
+  max-height: 75vh;
+
+  overflow-y: scroll;
+
+  position: absolute;
+  z-index: 9999999;
+
+  top: 100%;
+  left: -10%;
+
+  border: 0;
+  border-radius: $border-radius;
+  padding: $padding 0;
+
+  background-color: $select-background-color;
+  color: $font-color;
+
+  cursor: pointer;
+}
+
+.select.select--active .select__list {
+  visibility: visible;
+  opacity: 1;
+}
+
+.select__list__item {
+  transition: all 100ms ease;
+
+  max-width: 100%;
+
+  padding: 0.2em 0.8em;
+
+  background-color: $select-background-color;
+  color: $font-color;
+
+  text-align: left;
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: $select-background-color-active;
+  }
+}

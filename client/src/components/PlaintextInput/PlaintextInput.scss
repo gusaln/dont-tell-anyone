@@ -1,0 +1,21 @@
+.input {
+  margin: auto auto 2em;
+}
+
+.input label {
+  display: inline-block;
+  margin-bottom: 0.2em;
+}
+.input input {
+  width: 100%;
+
+  padding: 6px;
+
+  border: 2px solid var(--font-color);
+  color: var(--font-color);
+  background: var(--background-color);
+}
+
+.input input:focus {
+  background: var(--background-color-light);
+}

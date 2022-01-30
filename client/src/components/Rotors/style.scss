@@ -1,0 +1,65 @@
+@import "../../styles/variables";
+
+.rotors-container {
+  max-width: 60%;
+  min-width: 30%;
+
+  border-radius: $border-radius;
+  padding: 0 16px;
+}
+
+.rotors {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+
+  font-family: "Courier New", Courier, monospace;
+}
+
+.rotors__legend {
+  display: block;
+  flex-grow: 0;
+
+  margin-top: 54px;
+  margin-right: 2px;
+  margin-left: 2px;
+
+  color: $grey-light;
+  font-size: 0.9rem;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.rotors__legend * {
+  display: block;
+
+  height: 15px;
+}
+
+.rotors__input,
+.rotors__output {
+  position: relative;
+  font-weight: bold;
+
+  &::after {
+    position: absolute;
+
+    font-size: 0.8em;
+    left: 110%;
+  }
+}
+
+.rotors__input {
+  color: $primary;
+
+  &::after {
+    content: "<<<";
+  }
+}
+
+.rotors__output {
+  color: $secundary;
+
+  &::after {
+    content: ">>>";
+  }
+}

@@ -1,0 +1,41 @@
+$sides: (
+  "a": (
+    "",
+  ),
+  "x": (
+    "-left",
+    "-right",
+  ),
+  "y": (
+    "-top",
+    "-bottom",
+  ),
+  "t": (
+    "-top",
+  ),
+  "r": (
+    "-right",
+  ),
+  "b": (
+    "-bottom",
+  ),
+  "l": (
+    "-left",
+  ),
+);
+
+@each $scale in (0, 1, 2, 4, 6, 8, 12, 16) {
+  @each $name, $attrs in $sides {
+    .m#{$name}-#{$scale} {
+      @each $attr in $attrs {
+        margin#{$attr}: #{$scale}px !important;
+      }
+    }
+
+    .p#{$name}-#{$scale} {
+      @each $attr in $attrs {
+        padding#{$attr}: #{$scale}px !important;
+      }
+    }
+  }
+}

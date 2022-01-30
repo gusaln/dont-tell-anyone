@@ -1,0 +1,27 @@
+.message-input .input {
+  margin-top: 0.8em;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.message-input .input textarea {
+  background: $background-color-light;
+}
+
+.message-input .input textarea:focus {
+  background: $background-color;
+}
+
+.message-input .input {
+  margin-bottom: 0.8em;
+}
+
+.message-input .button {
+  background: $background-color-light;
+}
+
+.message-input .button:hover {
+  background: $background-color;
+}

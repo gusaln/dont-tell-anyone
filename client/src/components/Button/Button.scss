@@ -1,0 +1,40 @@
+@import "../../styles/variables";
+
+.button {
+  display: block;
+
+  color: $font-color;
+  border: 2px solid $font-color;
+  background: $background-color;
+
+  transition: all 100ms ease;
+}
+
+.button,
+.button > button {
+  cursor: pointer;
+}
+
+.button:hover:not(:disabled) {
+  background: $background-color-light;
+}
+
+.button button {
+  height: 100%;
+  width: 100%;
+
+  padding: 0.5em 2em;
+  border: 0px;
+
+  color: inherit;
+  line-height: inherit;
+  background-color: inherit;
+}
+
+.button button:disabled {
+  cursor: progress;
+}
+
+.button--small {
+  font-size: 0.8rem !important;
+}

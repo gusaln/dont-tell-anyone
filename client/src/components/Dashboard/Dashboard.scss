@@ -1,0 +1,51 @@
+@import "../../styles/variables";
+
+.dashboard {
+  display: block;
+
+  max-height: 100%;
+  height: 100%;
+
+  border-radius: $border-radius;
+  padding: 16px;
+
+  background-color: $background-color-light;
+}
+
+.dashboard__section {
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard__subtitle {
+  margin-top: -2px;
+  margin-bottom: 8px;
+}
+
+.dashboard__section:not(:last-child) {
+  padding-bottom: 12px;
+  border-bottom: 1px solid $grey-light;
+  margin-top: auto;
+  margin-bottom: 8px;
+}
+
+.text {
+  display: block;
+
+  min-height: 20px;
+
+  margin-top: 8px;
+
+  border-color: $font-color;
+  border-left: 4px solid;
+  border-right: 4px solid;
+
+  line-height: 20px;
+}
+
+.text.text--plain {
+  color: $primary;
+}
+.text.text--cypher {
+  color: $secundary;
+}
