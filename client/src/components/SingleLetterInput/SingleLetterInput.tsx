@@ -1,29 +1,20 @@
+import React from "react";
 import "./SingleLetterInput.scss";
-import React, { useState } from "react";
-import { ALPHABET } from "../../services/enigma";
 
-export default function SingleLetterInput(props) {
-  const [input, setInput] = useState("");
+interface SingleLetterInputProps {
+  value?: string;
+  onKeyboardEvent: (ev: KeyboardEvent) => void;
+}
+
+export default function SingleLetterInput({ value = "", onKeyboardEvent }: SingleLetterInputProps) {
+  // const [value, setInput] = useState("");
 
   /**
    * @param {KeyboardEvent} ev
    */
   function onKeyUp(ev) {
     ev.preventDefault();
-    const key = ev.key;
-    // console.log("keyup", { key });
-
-    if (ev.key === "Backspace") {
-      props.onBackspace();
-      return;
-    }
-
-    if (ev.ctrlKey || (ev.key !== " " && ALPHABET.indexOf(key.toUpperCase()) < 0)) {
-      return;
-    }
-
-    props.onLetterInput(key);
-    setInput(key);
+    onKeyboardEvent(ev);
   }
 
   /**
@@ -31,12 +22,12 @@ export default function SingleLetterInput(props) {
    */
   function onPaste(ev) {
     ev.preventDefault();
-    // console.log("paste", { text: ev.clipboardData.getData("text") });
+    console.log("paste", { text: ev.clipboardData.getData("text") });
 
-    const text = ev.clipboardData.getData("text");
+    // const text = ev.clipboardData.getData("text");
 
-    props.onMessageInput(text);
-    setInput(text);
+    // props.onMessageInput(text);
+    // setInput(text);
   }
 
   return (
@@ -46,7 +37,20 @@ export default function SingleLetterInput(props) {
 
       <div className="input singleletter-input">
         {/* <label htmlFor="singleletter">Single Letter input</label> */}
-        <input id="singleletter" value={input} onKeyUp={onKeyUp} onPaste={onPaste} placeholder="Type a message" />
+        <textarea
+          id="singleletter"
+          value={value}
+          onKeyUp={onKeyUp}
+          onPaste={onPaste}
+          placeholder="Type a message"
+        />
+        {/* <input
+          id="singleletter"
+          value={value}
+          onKeyUp={onKeyUp}
+          onPaste={onPaste}
+          placeholder="Type a message"
+        /> */}
       </div>
     </div>
   );

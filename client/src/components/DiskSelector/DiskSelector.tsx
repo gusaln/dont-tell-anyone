@@ -2,9 +2,9 @@ import { mdiArrowDownDropCircle } from "@mdi/js";
 import Icon from "@mdi/react";
 import React, { useState } from "react";
 import { classname } from "../../utils";
-import "./Select.scss";
+import "./style.scss";
 
-export default function Select(props) {
+export default function DiskSelector(props) {
   const [isActive, setActive] = useState(false);
 
   const valueGetter = props.valueGetter

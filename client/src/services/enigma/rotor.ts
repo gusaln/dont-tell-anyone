@@ -1,7 +1,7 @@
 import { ALPHABET } from "./const";
 import {
   DiskDefinition,
-  LetterMap,
+  LetterIndexMap,
   ReflectorDefinition,
   ReflectorTypes,
   RotorDefinition,
@@ -29,8 +29,8 @@ abstract class Disk implements DiskDefinition {
     return this.letters.split("");
   }
 
-  getForwardsLetterMap(): LetterMap {
-    let rotorMap: LetterMap = {};
+  getForwardsLetterMap(): LetterIndexMap {
+    let rotorMap: LetterIndexMap = {};
 
     this.letterList.forEach((letter, index) => {
       rotorMap[index] = ALPHABET.indexOf(letter);
@@ -39,8 +39,8 @@ abstract class Disk implements DiskDefinition {
     return rotorMap;
   }
 
-  getBackwardsLetterMap(): LetterMap {
-    let rotorMap: LetterMap = {};
+  getBackwardsLetterMap(): LetterIndexMap {
+    let rotorMap: LetterIndexMap = {};
 
     this.letterList.forEach((letter, index) => {
       rotorMap[ALPHABET.indexOf(letter)] = index;

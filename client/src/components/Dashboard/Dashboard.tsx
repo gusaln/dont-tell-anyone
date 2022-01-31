@@ -1,63 +1,40 @@
 import React, { useEffect, useState } from "react";
 import useEnigmaContext from "../../hooks/useEnigmaContext";
+import useStream from "../../hooks/useStream";
 import { ALPHABET } from "../../services/enigma";
 import Button from "../Button/Button";
 import SingleLetterInput from "../SingleLetterInput/SingleLetterInput";
 import "./Dashboard.scss";
 
 export default function Dashboard() {
-  const { encode, encodeMessage, clearLastPath, onMoveRotorsBackwards, offsets } =
-    useEnigmaContext();
+  const { enigmaService } = useEnigmaContext();
 
-  const [plaintext, setPlaintext] = useState("");
-  const [cyphertext, setCyphertext] = useState("");
-  const [initialOffsets, setInitialOffsets] = useState(() => offsets.slice());
+  const { plaintext, cyphertext, offsets } = useStream(enigmaService.current.machineState$, {
+    plaintext: undefined,
+    cyphertext: undefined,
+    offsets: [] as number[],
+  });
 
-  function handleLetterInput(letter) {
-    if (plaintext === "") {
-      setInitialOffsets(offsets.slice());
-    }
+  const [initialOffsets, setInitialOffsets] = useState<number[]>(() => offsets);
 
-    setPlaintext((p) => p + letter);
-    setCyphertext((c) => c + encode(letter));
-  }
-
-  function handleBackspace() {
-    if (plaintext === "") {
-      return;
-    }
-
-    if (plaintext[plaintext.length - 1] != " ") onMoveRotorsBackwards();
-
-    setPlaintext((text) => text.slice(0, text.length - 1));
-    setCyphertext((text) => text.slice(0, text.length - 1));
-  }
-
-  function handleMessageInput(message, immidiate = true) {
-    if (plaintext === "") {
-      setInitialOffsets(offsets.slice());
-    }
-
-    setPlaintext((p) => p + message);
-    setCyphertext((c) => c + encodeMessage(message));
+  function handleInputKeyboardEvent(ev: KeyboardEvent) {
+    enigmaService.current.handleInputKeyboardEvent(ev);
   }
 
   function handleMessageClear() {
-    setPlaintext("");
-    setCyphertext("");
-    clearLastPath();
+    enigmaService.current.clearPlaintext();
   }
 
   useEffect(() => console.log("Dashboard rerendered"));
 
+  useEffect(() => {
+    if (plaintext == "") setInitialOffsets(offsets);
+  }, [plaintext]);
+
   return (
     <section className="dashboard">
       <div className="dashboard__section">
-        <SingleLetterInput
-          onLetterInput={handleLetterInput}
-          onMessageInput={handleMessageInput}
-          onBackspace={handleBackspace}
-        />
+        <SingleLetterInput value={plaintext} onKeyboardEvent={handleInputKeyboardEvent} />
       </div>
 
       <div className="dashboard__section">

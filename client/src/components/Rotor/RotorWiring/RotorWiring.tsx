@@ -1,10 +1,15 @@
 import React, { useLayoutEffect, useRef, useState } from "react";
-import { cap, LetterMap } from "../../../services/enigma";
+import {
+  cap,
+  DISK_TEETH_HALF_HEIGHT_PX,
+  DISK_TEETH_HEIGHT_PX,
+  LetterIndexMap,
+} from "../../../services/enigma";
 import { classname } from "../../../utils";
 import "./RotorWiring.scss";
 
 type RotorWiringProps = {
-  dictionary: LetterMap;
+  dictionary: LetterIndexMap;
   offset: number;
   stepForwards: { input?: number; output?: number };
   stepBackwards: { input?: number; output?: number };
@@ -42,8 +47,8 @@ export default function RotorWiring({
             cypherIndex = cap(cypherIndex - offset);
 
             let capLength = size.width * 0.125;
-            let plainCapH = 15 * realLetterIndex + 6;
-            let cypherCapH = 15 * cypherIndex + 6;
+            let plainCapH = DISK_TEETH_HEIGHT_PX * realLetterIndex + DISK_TEETH_HALF_HEIGHT_PX;
+            let cypherCapH = DISK_TEETH_HEIGHT_PX * cypherIndex + DISK_TEETH_HALF_HEIGHT_PX;
 
             return (
               <g key={i}>

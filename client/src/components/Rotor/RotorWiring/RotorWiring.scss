@@ -1,5 +1,5 @@
 @import "../../../styles/variables";
-@import "../../Rotors/variables.scss";
+@import "../../DetailedEnigma/variables";
 
 .rotor__wiring__container {
   position: absolute;
@@ -24,7 +24,7 @@
   }
 
   &.rotor--output {
-    stroke: $secundary;
+    stroke: $secondary;
     stroke-width: 2;
   }
 }

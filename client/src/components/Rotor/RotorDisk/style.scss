@@ -1,4 +1,4 @@
-@import "../../styles/variables";
+@import "../../../styles/variables";
 
 $rotor-height: 15px;
 $rotor-background-color: $background-color-light;
@@ -130,9 +130,9 @@ $rotor-teeth-width: 8px;
 }
 
 .rotor__forwards {
-  color: $input-color;
+  color: $primary;
 }
 
 .rotor__backwards {
-  color: $output-color;
+  color: $secondary;
 }

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Dashboard from "./components/Dashboard/Dashboard";
-import Rotors from "./components/Rotors/Rotors";
+import DetailedEnigma from "./components/DetailedEnigma/DetailedEnigma";
 import { ProvideEnigmaContext } from "./hooks/useEnigmaContext";
 
 export default function App() {
@@ -9,7 +9,7 @@ export default function App() {
   return (
     <div className="app">
       <ProvideEnigmaContext>
-        <Rotors />
+        <DetailedEnigma />
         <Dashboard />
       </ProvideEnigmaContext>
     </div>

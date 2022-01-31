@@ -1,5 +1,5 @@
 @import "../../../styles/variables";
-@import "../../Rotors/variables.scss";
+@import "../../DetailedEnigma/variables";
 
 .reflector__wiring__container {
   position: absolute;
@@ -19,12 +19,12 @@
   stroke-width: 1;
 
   &.reflector--input {
-    stroke: $mix;
+    stroke: $input-color;
     stroke-width: 2;
   }
 
   &.reflector--output {
-    stroke: $mix;
+    stroke: $output-color;
     stroke-width: 2;
   }
 }
