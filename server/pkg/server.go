@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -28,11 +29,15 @@ func NewServer() *Server {
 func (srv *Server) Run() {
 	go srv.processMessages()
 
-	var upgrader = websocket.Upgrader{} // use default options
+	var upgrader = websocket.Upgrader{
+		CheckOrigin: func(r *http.Request) bool {
+			return true
+		},
+	} // use default options
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		conn, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {
-			log.Print("upgrade failed:", err)
+			log.Print("Upgrade failed:", err)
 			return
 		}
 
@@ -48,22 +53,11 @@ func (srv *Server) Run() {
 	log.Fatal(http.ListenAndServe(":4242", nil))
 }
 
-func (srv *Server) broadcast(msg *Message) {
-	log.Printf("broadcasting message: %v", msg)
-
-	for _, s := range srv.Sockets {
-		err := s.Connection.WriteMessage(websocket.BinaryMessage, []byte(msg.Content))
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-}
-
 func (srv *Server) processMessages() {
 	for {
 		select {
 		case msg := <-srv.inboundMessages:
-			srv.broadcast(msg)
+			srv.sendMessage(msg)
 		case socket := <-srv.newSockets:
 			srv.addSocket(socket)
 		case socketId := <-srv.closedSockets:
@@ -72,13 +66,29 @@ func (srv *Server) processMessages() {
 	}
 }
 
+func (srv *Server) sendMessage(msg *Message) {
+	log.Printf("Sending message: %v", msg)
+
+	if s, present := srv.Sockets[msg.To]; present {
+		var err error
+		var payload []byte
+		if payload, err = json.Marshal(msg); err != nil {
+			log.Fatal(err)
+		}
+
+		if err = s.Connection.WriteMessage(websocket.TextMessage, payload); err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+
 func (srv *Server) addSocket(socket *Socket) {
 	srv.Sockets[socket.Id] = socket
 	socket.Listen(srv.inboundMessages, srv.closedSockets)
-	log.Printf("new socket: %v", *socket)
+	log.Printf("New socket: %v", socket.Id)
 }
 
 func (srv *Server) removeSocket(socketId SocketId) {
 	delete(srv.Sockets, socketId)
-	log.Print("socket removed:", socketId)
+	log.Printf("Socket removed: %v", socketId)
 }

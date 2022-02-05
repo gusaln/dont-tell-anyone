@@ -1,9 +1,11 @@
 package server
 
 type Message struct {
-	Content string
+	From    SocketId `json:"from,omitempty"`
+	To      SocketId `json:"to"`
+	Content string   `json:"content"`
 }
 
-func NewMessage(content string) *Message {
-	return &Message{Content: content}
+func NewMessage(from, to SocketId, content string) *Message {
+	return &Message{From: from, To: to, Content: content}
 }
