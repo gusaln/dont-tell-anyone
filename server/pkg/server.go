@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"github.com/gobwas/ws"
 	"github.com/gobwas/ws/wsutil"
 )
@@ -28,9 +29,13 @@ func NewServer() *Server {
 func (srv *Server) Run() {
 	go srv.processMessages()
 
-	http.HandleFunc("/chat", srv.handleWebsocketConnection())
-	log.Println("Opening on port 4242")
-	log.Fatal(http.ListenAndServe(":4242", nil))
+	router := gin.New()
+	router.Use(gin.Logger())
+	router.Use(gin.Recovery())
+
+	router.Any("/chat", srv.handleWebsocketConnection())
+	log.Fatal(router.Run(":4242"))
+
 }
 
 func (srv *Server) processMessages() {
@@ -74,19 +79,19 @@ func (srv *Server) removeSocket(socketId ClientId) {
 	log.Printf("Socket removed: %v", socketId)
 }
 
-func (srv *Server) handleWebsocketConnection() func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		id := r.FormValue("ticket")
+func (srv *Server) handleWebsocketConnection() func(ctx *gin.Context) {
+	return func(ctx *gin.Context) {
+		id := ctx.Query("ticket")
 
 		if id == "" {
-			http.Error(w, "Bad request", http.StatusBadRequest)
+			ctx.String(http.StatusBadRequest, "Bad request")
 			log.Print("Client did not provide an address")
 			return
 		}
 
-		conn, _, _, err := ws.UpgradeHTTP(r, w)
+		conn, _, _, err := ws.UpgradeHTTP(ctx.Copy().Request, ctx.Copy().Writer)
 		if err != nil {
-			http.Error(w, "Bad request", http.StatusBadRequest)
+			ctx.String(http.StatusBadRequest, "Bad request")
 			log.Print("Upgrade failed:", err)
 			return
 		}
