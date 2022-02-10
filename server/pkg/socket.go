@@ -3,34 +3,34 @@ package server
 import (
 	"encoding/json"
 	"log"
+	"net"
 
-	"github.com/gorilla/websocket"
+	"github.com/gobwas/ws"
+	"github.com/gobwas/ws/wsutil"
 )
 
-type SocketId uint32
-
 type Socket struct {
-	Id         SocketId
-	Connection *websocket.Conn
+	Id         ClientId
+	Connection net.Conn
 }
 
-func (s *Socket) Listen(messages chan<- *Message, closed chan<- SocketId) {
+func (s *Socket) Listen(messages chan<- *Message, closed chan<- ClientId) {
 	go func() {
 		defer func() {
 			// This call waits until the message is processed
-			closed <- SocketId(s.Id)
+			closed <- ClientId(s.Id)
 
 			s.Connection.Close()
 		}()
 
 		for {
-			msgT, payload, readErr := s.Connection.ReadMessage()
+			payload, op, readErr := wsutil.ReadClientData(s.Connection)
 			if readErr != nil {
 				log.Printf("[Error] reading message from %v: %v \n", s.Id, readErr)
 				break
 			}
 
-			if msgT != websocket.TextMessage {
+			if op != ws.OpText {
 				log.Printf("[Error] Message from %v can't be parsed \n", s.Id)
 				continue
 			}
@@ -53,10 +53,15 @@ func (s *Socket) Listen(messages chan<- *Message, closed chan<- SocketId) {
 }
 
 func (s *Socket) parseMessage(payload []byte) (message *Message, err error) {
-	if err = json.Unmarshal(payload, message); err != nil {
+	var received struct {
+		To      ClientId `json:"to"`
+		Content string   `json:"content"`
+	}
+
+	if err = json.Unmarshal(payload, &received); err != nil {
 		message = nil
 	} else {
-		message.From = s.Id
+		message = NewMessage(s.Id, received.To, received.Content)
 	}
 
 	return

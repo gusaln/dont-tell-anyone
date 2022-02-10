@@ -5,55 +5,36 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/gorilla/websocket"
+	"github.com/gobwas/ws"
+	"github.com/gobwas/ws/wsutil"
 )
 
 type Server struct {
-	Sockets         map[SocketId]*Socket
+	sockets         map[ClientId]*Socket
 	inboundMessages chan *Message
 	newSockets      chan *Socket
-	closedSockets   chan SocketId
-	lastSocketId    SocketId
+	closedSockets   chan ClientId
 }
 
 func NewServer() *Server {
 	return &Server{
-		Sockets:         make(map[SocketId]*Socket),
+		sockets:         make(map[ClientId]*Socket),
 		inboundMessages: make(chan *Message),
 		newSockets:      make(chan *Socket),
-		closedSockets:   make(chan SocketId),
-		lastSocketId:    0,
+		closedSockets:   make(chan ClientId),
 	}
 }
 
 func (srv *Server) Run() {
 	go srv.processMessages()
 
-	var upgrader = websocket.Upgrader{
-		CheckOrigin: func(r *http.Request) bool {
-			return true
-		},
-	} // use default options
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		conn, err := upgrader.Upgrade(w, r, nil)
-		if err != nil {
-			log.Print("Upgrade failed:", err)
-			return
-		}
-
-		id := srv.lastSocketId + 1
-		srv.lastSocketId = id
-
-		socket := &Socket{Id: id, Connection: conn}
-
-		// This call waits until the message is processed
-		srv.newSockets <- socket
-	})
+	http.HandleFunc("/chat", srv.handleWebsocketConnection())
 	log.Println("Opening on port 4242")
 	log.Fatal(http.ListenAndServe(":4242", nil))
 }
 
 func (srv *Server) processMessages() {
+	// Everything is proccessed by a single goroutine to prevent having to use locks for now.
 	for {
 		select {
 		case msg := <-srv.inboundMessages:
@@ -69,26 +50,50 @@ func (srv *Server) processMessages() {
 func (srv *Server) sendMessage(msg *Message) {
 	log.Printf("Sending message: %v", msg)
 
-	if s, present := srv.Sockets[msg.To]; present {
+	if s, present := srv.sockets[msg.To]; present {
 		var err error
 		var payload []byte
 		if payload, err = json.Marshal(msg); err != nil {
 			log.Fatal(err)
 		}
 
-		if err = s.Connection.WriteMessage(websocket.TextMessage, payload); err != nil {
+		if err = wsutil.WriteServerMessage(s.Connection, ws.OpText, payload); err != nil {
 			log.Fatal(err)
 		}
 	}
 }
 
 func (srv *Server) addSocket(socket *Socket) {
-	srv.Sockets[socket.Id] = socket
+	srv.sockets[socket.Id] = socket
 	socket.Listen(srv.inboundMessages, srv.closedSockets)
 	log.Printf("New socket: %v", socket.Id)
 }
 
-func (srv *Server) removeSocket(socketId SocketId) {
-	delete(srv.Sockets, socketId)
+func (srv *Server) removeSocket(socketId ClientId) {
+	delete(srv.sockets, socketId)
 	log.Printf("Socket removed: %v", socketId)
+}
+
+func (srv *Server) handleWebsocketConnection() func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id := r.FormValue("ticket")
+
+		if id == "" {
+			http.Error(w, "Bad request", http.StatusBadRequest)
+			log.Print("Client did not provide an address")
+			return
+		}
+
+		conn, _, _, err := ws.UpgradeHTTP(r, w)
+		if err != nil {
+			http.Error(w, "Bad request", http.StatusBadRequest)
+			log.Print("Upgrade failed:", err)
+			return
+		}
+
+		socket := &Socket{Id: ClientId(id), Connection: conn}
+
+		// This call waits until the message is processed
+		srv.newSockets <- socket
+	}
 }
